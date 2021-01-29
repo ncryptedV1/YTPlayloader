@@ -1,0 +1,6 @@
+# IDE-settings
+.idea
+*.iml
+
+# temp build folders
+target
