@@ -41,6 +41,7 @@ public class YTPLController {
 
     private static String YTDLPath;
     private static String FfmpegPath;
+    private static String FfprobePath;
     private static String AtomicParsleyPath;
 
     public void setStageAndSetup(Stage stage) {
@@ -51,19 +52,25 @@ public class YTPLController {
             downloadPath.mkdirs();
         }
         downloadPathLabel.setText(downloadPath.getAbsolutePath());
-        YTDLPath = YTPlayloader.getJarDir() + File.separator + "youtube-dl.exe";
+        YTDLPath = YTPlayloader.getJarDir() + File.separator + "yt-dlp.exe";
         FfmpegPath = YTPlayloader.getJarDir() + File.separator + "ffmpeg.exe";
+        FfprobePath = YTPlayloader.getJarDir() + File.separator + "ffprobe.exe";
         AtomicParsleyPath = YTPlayloader.getJarDir() + File.separator + "AtomicParsley.exe";
         try {
             File ffmpegTarget = new File(FfmpegPath);
+            File ffprobeTarget = new File(FfprobePath);
             File ytdlTarget = new File(YTDLPath);
             File atomicParsleyTarget = new File(AtomicParsleyPath);
             if (!ffmpegTarget.exists()) {
                 Files.copy(YTPLController.class.getClassLoader().getResource("ffmpeg.exe").openStream(),
                         ffmpegTarget.toPath());
             }
+            if (!ffprobeTarget.exists()) {
+                Files.copy(YTPLController.class.getClassLoader().getResource("ffprobe.exe").openStream(),
+                    ffprobeTarget.toPath());
+            }
             if (!ytdlTarget.exists()) {
-                Files.copy(YTPLController.class.getClassLoader().getResource("youtube-dl.exe").openStream(),
+                Files.copy(YTPLController.class.getClassLoader().getResource("yt-dlp.exe").openStream(),
                         ytdlTarget.toPath());
             }
             if (!atomicParsleyTarget.exists()) {
