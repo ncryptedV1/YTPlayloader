@@ -23,26 +23,90 @@ import java.util.stream.Collectors;
 
 public class YTPLController {
 
-    public TextField downloadLink;
-    public Label downloadPathLabel;
-
-    public Label downloaded;
-    public Label converted;
-
-    public ChoiceBox mp3Bitrate;
-    public CheckBox convertToMp3;
-    public TextArea logArea;
-
-
-    private Stage stage;
-    private File downloadPath;
-    private ExecutorService pool = Executors.newCachedThreadPool();
-    private static List<Process> ffmpegProcesses = new ArrayList<>();
-
+    private static final List<Process> ffmpegProcesses = new ArrayList<>();
     private static String YTDLPath;
     private static String FfmpegPath;
     private static String FfprobePath;
     private static String AtomicParsleyPath;
+    public TextField downloadLink;
+    public Label downloadPathLabel;
+    public Label downloaded;
+    public Label converted;
+    public ChoiceBox mp3Bitrate;
+    public CheckBox convertToMp3;
+    public TextArea logArea;
+    private Stage stage;
+    private File downloadPath;
+    private final ExecutorService pool = Executors.newCachedThreadPool();
+
+    private static void convertToMp3(File file, Bitrate bitrate) {
+        if (!file.exists()) {
+            return;
+        }
+        if (!file.getName().endsWith(".m4a")) {
+            return;
+        }
+        String input = file.getAbsolutePath();
+        Logger.log("Converting " + input + "...");
+        String output = input.substring(0, input.length() - 3) + "mp3";
+        execFfmpeg(() -> {
+                    new File(input).delete();
+                    infoConverted(output);
+                }, "-i", "\"" + input +
+                        "\"", "-vcodec", "mjpeg", "-vf", "scale=500:500,setsar=1:1,setdar=1:1", "-acodec", "libmp3lame",
+                "-id3v2_version", "3", "-metadata:s:v", "comment=\"Cover", "(front)\"",
+                (bitrate.isVBR() ? "-q:a" : "-b:a"),
+                bitrate.getFfmpegArg(), "\"" + output + "\"");
+    }
+
+    private static void execFfmpeg(Runnable onFinish, String... args) {
+        String[] cmd = new String[args.length + 1];
+        cmd[0] = "\"" + FfmpegPath + "\"";
+        System.arraycopy(args, 0, cmd, 1, args.length);
+        try {
+            Process conversion = Runtime.getRuntime().exec(cmd);
+            ffmpegProcesses.add(conversion);
+            Utils.readErrorStream(conversion);
+            ffmpegProcesses.remove(conversion);
+            onFinish.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<String> extractFileNames(String ytdlOutput) {
+        if (ytdlOutput == null) {
+            return null;
+        }
+        List<String> nameLines = Arrays.stream(ytdlOutput.split("\n")).filter(
+                s -> s.startsWith("[download] Destination:")).collect(Collectors.toList());
+        List<String> names = new ArrayList<>();
+        nameLines.forEach(line -> {
+            String[] lineArr = line.split(" ");
+            String fileName = "";
+            for (int i = 2; i < lineArr.length; i++) {
+                fileName += lineArr[i] + " ";
+            }
+            names.add(fileName.substring(0, fileName.length() - 1));
+        });
+        return names;
+    }
+
+    public static void infoDownloaded(String fileName) {
+        Logger.log("Downloaded: " + fileName);
+        YTPlayloader.runOnUIThread(
+                () -> getInstance().downloaded.setText(Integer.valueOf(getInstance().downloaded.getText()) + 1 + ""));
+    }
+
+    public static void infoConverted(String fileName) {
+        Logger.log("Converted - " + fileName);
+        YTPlayloader.runOnUIThread(
+                () -> getInstance().converted.setText(Integer.valueOf(getInstance().converted.getText()) + 1 + ""));
+    }
+
+    public static YTPLController getInstance() {
+        return YTPlayloader.getController();
+    }
 
     public void setStageAndSetup(Stage stage) {
         this.stage = stage;
@@ -67,7 +131,7 @@ public class YTPLController {
             }
             if (!ffprobeTarget.exists()) {
                 Files.copy(YTPLController.class.getClassLoader().getResource("ffprobe.exe").openStream(),
-                    ffprobeTarget.toPath());
+                        ffprobeTarget.toPath());
             }
             if (!ytdlTarget.exists()) {
                 Files.copy(YTPLController.class.getClassLoader().getResource("yt-dlp.exe").openStream(),
@@ -187,76 +251,5 @@ public class YTPLController {
             return;
         }
         downloadPathLabel.setText(downloadPath.getAbsolutePath());
-    }
-
-    private static void convertToMp3(File file, Bitrate bitrate) {
-        if (!file.exists()) {
-            return;
-        }
-        if (!file.getName().endsWith(".m4a")) {
-            return;
-        }
-        String input = file.getAbsolutePath();
-        Logger.log("Converting " + input + "...");
-        String output = input.substring(0, input.length() - 3) + "mp3";
-        execFfmpeg(() -> {
-                    new File(input).delete();
-                    infoConverted(output);
-                }, "-i", "\"" + input +
-                        "\"", "-vcodec", "mjpeg", "-vf", "scale=500:500,setsar=1:1,setdar=1:1", "-acodec", "libmp3lame",
-                "-id3v2_version", "3", "-metadata:s:v", "comment=\"Cover", "(front)\"",
-                (bitrate.isVBR() ? "-q:a" : "-b:a"),
-                bitrate.getFfmpegArg(), "\"" + output + "\"");
-    }
-
-    private static void execFfmpeg(Runnable onFinish, String... args) {
-        String[] cmd = new String[args.length + 1];
-        cmd[0] = "\"" + FfmpegPath + "\"";
-        for (int i = 0; i < args.length; i++) {
-            cmd[i + 1] = args[i];
-        }
-        try {
-            Process conversion = Runtime.getRuntime().exec(cmd);
-            ffmpegProcesses.add(conversion);
-            Utils.readErrorStream(conversion);
-            ffmpegProcesses.remove(conversion);
-            onFinish.run();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static List<String> extractFileNames(String ytdlOutput) {
-        if (ytdlOutput == null) {
-            return null;
-        }
-        List<String> nameLines = Arrays.stream(ytdlOutput.split("\n")).filter(
-                s -> s.startsWith("[download] Destination:")).collect(Collectors.toList());
-        List<String> names = new ArrayList<>();
-        nameLines.forEach(line -> {
-            String[] lineArr = line.split(" ");
-            String fileName = "";
-            for (int i = 2; i < lineArr.length; i++) {
-                fileName += lineArr[i] + " ";
-            }
-            names.add(fileName.substring(0, fileName.length() - 1));
-        });
-        return names;
-    }
-
-    public static void infoDownloaded(String fileName) {
-        Logger.log("Downloaded: " + fileName);
-        YTPlayloader.runOnUIThread(
-                () -> getInstance().downloaded.setText(Integer.valueOf(getInstance().downloaded.getText()) + 1 + ""));
-    }
-
-    public static void infoConverted(String fileName) {
-        Logger.log("Converted - " + fileName);
-        YTPlayloader.runOnUIThread(
-                () -> getInstance().converted.setText(Integer.valueOf(getInstance().converted.getText()) + 1 + ""));
-    }
-
-    public static YTPLController getInstance() {
-        return YTPlayloader.getController();
     }
 }
