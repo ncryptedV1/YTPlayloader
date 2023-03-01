@@ -5,6 +5,7 @@ JavaFX-UI for youtube-dl with bulk-download support and inbuilt conversion to ce
 
 # Requirements
 - Windows 7+ (program should be easily adaptable to Linux & macOS - contact me in case of need)
+  - Note: Double-clicking the jar might not work as for configuration issues in Windows. Start the program using `java -jar ytplayloader-X.X.jar` using the console in this case
 - Java 17+
 
 # Dependencies
