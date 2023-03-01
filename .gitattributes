@@ -1,0 +1,4 @@
+src/main/resources/AtomicParsley.exe filter=lfs diff=lfs merge=lfs -text
+src/main/resources/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
+src/main/resources/ffprobe.exe filter=lfs diff=lfs merge=lfs -text
+src/main/resources/yt-dlp.exe filter=lfs diff=lfs merge=lfs -text
