@@ -49,7 +49,7 @@ public enum Bitrate {
     if (readable.startsWith("VBR")) {
       return valueOf(readable.split(" ")[0]);
     } else {
-      return getByRate(Integer.valueOf(readable.split(" ")[0]));
+      return getByRate(Integer.parseInt(readable.split(" ")[0]));
     }
   }
 
@@ -65,7 +65,7 @@ public enum Bitrate {
     if (isVBR()) {
       return name().substring(3);
     } else {
-      return getRate() + "k";
+      return getRate() + "K";
     }
   }
 

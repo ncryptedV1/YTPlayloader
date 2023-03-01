@@ -16,13 +16,26 @@ public class Logger {
   }
 
   public static void log(String message) {
+    log(message, false);
+  }
+
+  public static void log(String message, boolean replaceLine) {
     if (logArea == null) {
       return;
     }
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm:ss] ");
-    YTPlayloader.runOnUIThread(
-        () -> logArea.appendText(dateFormat.format(calendar.getTime()) + message + "\n"));
+    String msg = dateFormat.format(calendar.getTime()) + message + "\n";
+    YTPlayloader.runOnUIThread(() -> {
+      if (replaceLine) {
+        int end = logArea.getLength();
+        String[] lines = logArea.getText().split("\\n");
+        int start = end - lines[lines.length - 1].length() - 1;
+        logArea.replaceText(start, end, msg);
+      } else {
+        logArea.appendText(msg);
+      }
+    });
   }
 
   public static void warn(String message) {

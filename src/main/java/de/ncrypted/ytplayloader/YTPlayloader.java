@@ -43,7 +43,7 @@ public class YTPlayloader extends Application {
   public void start(Stage primaryStage) throws Exception {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/YTPLGui.fxml"));
     Parent root = loader.load();
-    primaryStage.setTitle("Made with {} and <3 by Oliver Schirmer");
+    primaryStage.setTitle("Made with {} and ❤️ by Oliver Schirmer");
     primaryStage.getIcons()
         .add(new Image(
             YTPlayloader.class.getClassLoader().getResourceAsStream("blackyt_arrow.png")));

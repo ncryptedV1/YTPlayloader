@@ -1,58 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.*?>
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ncrypted.ytplayloader.YTPLController">
-    <children>
-        <TextField fx:id="downloadLink" layoutX="30.0" layoutY="124.0" prefHeight="26.0" prefWidth="360.0" text="Youtube-Link" />
-        <Label alignment="CENTER" layoutX="53.0" layoutY="16.0" prefHeight="17.0" prefWidth="347.0" text="Youtube-Playloader">
-            <font>
-                <Font name="Impact" size="38.0" />
-            </font>
-        </Label>
-        <Label alignment="CENTER" layoutX="71.0" layoutY="58.0" text="(The one and only) made by Oliver Schirmer">
-            <font>
-                <Font name="Ink Free" size="17.0" />
-            </font>
-        </Label>
-        <Label layoutX="33.0" layoutY="199.0" prefHeight="20.0" prefWidth="91.0" text="Downloaded:">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="downloaded" layoutX="121.0" layoutY="201.0" prefHeight="17.0" prefWidth="26.0" text="0" />
-        <Label layoutX="158.0" layoutY="199.0" prefHeight="20.0" prefWidth="70.0" text="Converted:">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="converted" layoutX="234.0" layoutY="201.0" prefHeight="17.0" prefWidth="36.0" text="0" />
-        <Button layoutX="416.0" layoutY="125.0" mnemonicParsing="false" onAction="#download" text="Download" />
-        <Label fx:id="downloadPathLabel" layoutX="30.0" layoutY="165.0" prefHeight="20.0" prefWidth="360.0" text="Download-Path">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-        <Button layoutX="416.0" layoutY="161.0" mnemonicParsing="false" onAction="#openDownloadPathSelector" text="Select Folder">
-            <font>
-                <Font size="13.0" />
-            </font>
-        </Button>
-        <CheckBox fx:id="convertToMp3" layoutX="295.0" layoutY="200.0" mnemonicParsing="false" text="Convert to mp3" />
-        <ImageView fitHeight="55.0" fitWidth="81.0" layoutX="457.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@blackyt.png" />
-            </image>
-        </ImageView>
-        <ChoiceBox fx:id="mp3Bitrate" layoutX="417.0" layoutY="196.0" prefWidth="150.0" />
-        <TextArea fx:id="logArea" editable="false" layoutX="33.0" layoutY="236.0" prefHeight="152.0" prefWidth="536.0" />
-      <Button layoutX="497.0" layoutY="125.0" mnemonicParsing="false" onAction="#downloadList" text="Download List" />
-    </children>
+<?import javafx.scene.text.Font?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+  prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ncrypted.ytplayloader.YTPLController">
+  <TextField fx:id="downloadLink" layoutX="30.0" layoutY="124.0" prefHeight="26.0"
+    prefWidth="360.0" text="Youtube-Link"/>
+  <Label alignment="CENTER" layoutX="53.0" layoutY="16.0" prefHeight="17.0" prefWidth="347.0"
+    text="Youtube-Playloader">
+    <font>
+      <Font name="Impact" size="38.0"/>
+    </font>
+  </Label>
+  <Label layoutX="33.0" layoutY="199.0" prefHeight="20.0" prefWidth="91.0" text="Downloaded:">
+    <font>
+      <Font size="14.0"/>
+    </font>
+  </Label>
+  <Label fx:id="downloaded" layoutX="121.0" layoutY="201.0" prefHeight="17.0" prefWidth="26.0"
+    text="0"/>
+  <Button layoutX="416.0" layoutY="125.0" mnemonicParsing="false" onAction="#download"
+    text="Download"/>
+  <Label fx:id="downloadPathLabel" layoutX="30.0" layoutY="165.0" prefHeight="20.0"
+    prefWidth="360.0" text="Download-Path">
+    <font>
+      <Font name="System Bold" size="14.0"/>
+    </font>
+  </Label>
+  <Button layoutX="416.0" layoutY="161.0" mnemonicParsing="false"
+    onAction="#openDownloadPathSelector" text="Select Folder">
+    <font>
+      <Font size="13.0"/>
+    </font>
+  </Button>
+  <CheckBox fx:id="convertToMp3" layoutX="295.0" layoutY="200.0" mnemonicParsing="false"
+    text="Convert to mp3"/>
+  <ImageView fitHeight="55.0" fitWidth="81.0" layoutX="457.0" layoutY="22.0" pickOnBounds="true"
+    preserveRatio="true">
+    <Image url="@blackyt.png"/>
+  </ImageView>
+  <ChoiceBox fx:id="mp3Bitrate" layoutX="417.0" layoutY="196.0" prefWidth="150.0"/>
+  <TextArea fx:id="logArea" editable="false" layoutX="33.0" layoutY="236.0" prefHeight="152.0"
+    prefWidth="536.0"/>
+  <Button layoutX="497.0" layoutY="125.0" mnemonicParsing="false" onAction="#downloadList"
+    text="Download List"/>
 </Pane>
