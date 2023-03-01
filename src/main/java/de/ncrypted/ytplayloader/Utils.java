@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ncrypted
@@ -33,11 +37,21 @@ public class Utils {
       throw new IllegalArgumentException("The resource " + fileName + " is no valid resource!");
     }
 
-    File targetFile = new File(YTPlayloader.getJarDir() + File.separator + fileName);
+    File targetFile = new File(YTPLApplication.getJarDir() + File.separator + fileName);
     if (!targetFile.exists()) {
       try {
-        Files.copy(Path.of(resource.toURI()), targetFile.toPath());
-      } catch (IOException | URISyntaxException e) {
+        try {
+          // try accessing the inner-jar file system first
+          Path.of(resource.toURI());
+        } catch (FileSystemNotFoundException ex) {
+          // create file system if not existent yet
+          Map<String, String> env = new HashMap<>();
+          env.put("create", "true");
+          FileSystems.newFileSystem(resource.toURI(), env);
+        } finally {
+          Files.copy(Path.of(resource.toURI()), targetFile.toPath());
+        }
+      } catch (IOException | URISyntaxException ex) {
         // can safely be ignored, as resource URL is ensured to be correct
       }
     }

@@ -26,7 +26,7 @@ public class Logger {
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm:ss] ");
     String msg = dateFormat.format(calendar.getTime()) + message + "\n";
-    YTPlayloader.runOnUIThread(() -> {
+    YTPLApplication.runOnUIThread(() -> {
       if (replaceLine) {
         int end = logArea.getLength();
         String[] lines = logArea.getText().split("\\n");

@@ -55,12 +55,12 @@ public class YTPLController {
 
   public static void infoDownloaded(String fileName) {
     Logger.log("Downloaded: " + fileName);
-    YTPlayloader.runOnUIThread(() -> getInstance().downloaded.setText(
+    YTPLApplication.runOnUIThread(() -> getInstance().downloaded.setText(
         Integer.valueOf(getInstance().downloaded.getText()) + 1 + ""));
   }
 
   public static YTPLController getInstance() {
-    return YTPlayloader.getController();
+    return YTPLApplication.getController();
   }
 
   public void setStageAndSetup(Stage stage) {
@@ -168,7 +168,7 @@ public class YTPLController {
       String youtubeDlOut = null;
       try {
         youtubeDlOut = youtubeDlDownload(url, downloadFolder,
-            convertToMp3.isSelected() ? "mp3" : "best",
+            convertToMp3.isSelected() ? "mp3" : "aac",
             convertToMp3.isSelected() ? Bitrate.getByReadable(
                 (String) mp3Bitrate.getSelectionModel().getSelectedItem()).getFfmpegArg() : "0");
       } catch (RuntimeException ex) {
